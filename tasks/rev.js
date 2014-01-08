@@ -70,9 +70,19 @@ module.exports = function(grunt) {
 
         if (options.version) {
           // Get the origin file path, e.g. js/global.min.js
-          var origin = f.split(path.sep).slice(1).join(path.sep);
+          var origin;
+          var cwd = filePair.orig.cwd[filePair.orig.cwd.length - 1] === '/' ? filePair.orig.cwd : filePair.orig.cwd + '/';
+          if (filePair.orig.cwd) {
+            origin = f.substring(cwd.length);
+          } else {
+            origin = f.split(path.sep).slice(1).join(path.sep);
+          }
           // Mapping origin file path to hashed file path
-          versions[origin] = outPath.split(path.sep).slice(1).join(path.sep);
+          if (filePair.orig.cwd) {
+            versions[origin] = outPath.substring(cwd.length);
+          } else {
+            versions[origin] = outPath.split(path.sep).slice(1).join(path.sep);
+          }
         }
 
         grunt.log.write(f + ' ').ok(outPath);
